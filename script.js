@@ -49,13 +49,13 @@ function addToCart(name, price) {
 	}
 
 	updateCartModal();
+	updateCartCount();
 }
 
 function updateCartModal() {
 	cartItemsContainer.innerHTML = "";
 	let total = 0;
 
-	// biome-ignore lint/complexity/noForEach: <explanation>
 	cart.forEach((item) => {
 		const cartItemElement = document.createElement("div");
 
@@ -68,7 +68,7 @@ function updateCartModal() {
                 </div>
 
                 <div>
-                    <button>
+                    <button onClick="removeCartItems('${item.name}')"> 
                         remover
                     </button>
                 </div>
@@ -76,6 +76,28 @@ function updateCartModal() {
             </div>
         `;
 
+		cartTotal.innerHTML = `Total: $ ${calculateCartTotal()}`;
 		cartItemsContainer.appendChild(cartItemElement);
 	});
+}
+
+function updateCartCount(){
+	cartCounter.innerHTML = cart.length
+}
+
+function removeCartItems(name){
+	cart = cart.filter((item) => {
+		return item.name !== name
+	})
+
+	updateCartModal();
+	updateCartCount();
+}
+
+function calculateCartTotal() {
+    let total = 0;
+    cart.forEach((item) => {
+        total += item.price * item.quantity;
+    });
+    return total.toFixed(2);
 }
